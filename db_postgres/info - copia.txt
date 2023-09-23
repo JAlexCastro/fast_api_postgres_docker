@@ -1,0 +1,5 @@
+Username = admin
+Password = admin
+Database default = company
+Host = localhost
+Port = 9090

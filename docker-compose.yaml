@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  data_base:
+    image: postgres:13
+    restart: always
+    container_name: my_cont_postgres
+    environment:
+      POSTGRES_DB: "company"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    volumes:
+      - "./db_postgres/postgre_data_volume:/var/lib/postgresql/data"
+      - "./db_postgres/sql_scripts/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql"
+      - "./db_postgres/sql_scripts/data.sql:/docker-entrypoint-initdb.d/data.sql"
+    ports:
+      - "9090:5432"
+
+volumes:
+  postgre_data_volume: {}
