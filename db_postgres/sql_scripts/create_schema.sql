@@ -11,9 +11,9 @@ CREATE TABLE commercial.users (
 );
 
 ALTER TABLE IF EXISTS commercial.users
-    OWNER to admin;
+    OWNER to fast_user;
 
--- Cambiar eschema a --> storage
+-- Schema --> storage
 
 CREATE TABLE store.products (
     code character varying(4) PRIMARY KEY,
@@ -22,4 +22,4 @@ CREATE TABLE store.products (
     price float NOT NULL);
 
 ALTER TABLE IF EXISTS store.products
-    OWNER to admin;
+    OWNER to fast_user;

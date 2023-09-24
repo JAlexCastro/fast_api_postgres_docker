@@ -7,8 +7,8 @@ services:
     container_name: my_cont_postgres
     environment:
       POSTGRES_DB: "company"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_USER: "fast_user"
+      POSTGRES_PASSWORD: "fast_password"
     volumes:
       - "./db_postgres/postgre_data_volume:/var/lib/postgresql/data"
       - "./db_postgres/sql_scripts/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql"

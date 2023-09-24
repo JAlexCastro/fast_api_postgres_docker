@@ -1,86 +1,32 @@
-# Models from FastAPI
-from fastapi import FastAPI, HTTPException
+import sys
+import os
 
-# Internals Models
-from models.models_user import UserCreate, UserUpdate, UserOut
-from tables.table_user import Table_users
-from conection import session
+# Get the root directory path of your project
+ruta_proyecto = os.path.dirname(os.path.dirname(__file__))
 
+# Add the path to sys.path (To the root directory)
+sys.path.append(ruta_proyecto)
 
-app = FastAPI(title="API Rest de practica")
+#Package FastAPI
+from fastapi import FastAPI
 
-# Get User by ID
-@app.get("/user{user_id}")
-def get_user(id:int):
+#Internal Module
+from routers.router_product import router_product
+from routers.router_user import router_user
 
-    user = session.query(Table_users).filter_by(id=id).first()
+app = FastAPI(title="REST API towards PostgreSQL",
+              description="This project combines a PostgreSQL database in a Docker container with a REST API to easily enable database operations via the API.")     
 
-    if user:
-        user_dict = {
-            "id": user.id ,
-            "name": user.name,
-            "last_name": user.last_name,
-            "age": user.age}
-        
-        return user_dict 
-    else:
-        return HTTPException(status_code=404, detail="User NOT found")
+#Para Ejecutar, En la terminal: uvicorn main:app --reload
 
-# Get list of user
-@app.get("/list_user")
-def list_user():
-    all_users = session.query(Table_users).all()
-    
-    list = []
+app.version = "2.0.0"
 
-    for user in all_users:
-        response = {"id":user.id, "name":user.name, "last_name":user.last_name, "age":user.age}
-        list.append(response)
-    return list
+app.include_router(router_user)
+app.include_router(router_product)
 
-# Update User
-@app.put("/users/insert{id}")
-def insert_user(user_id: int, user: UserCreate):
-    
-    user_update = session.query(Table_users).filter_by(id=user_id).first()
+if __name__ == "__main__":
+    import subprocess
 
-    if user_update is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    else:
-        for key, value in user.dict().items():
-            setattr(user_update, key, value)
+    # Especifica el host al ejecutar el comando uvicorn al iniciar el script
+    subprocess.run(["uvicorn", "main:app", "--reload", "--host", "127.0.0.1"])
 
-        session.commit()
-        session.refresh(user_update)
-
-    return user_update
-
-# Create User
-@app.post("/user/new")
-def insert_user(user: UserCreate):
-    
-    user_exists = session.query(Table_users).filter_by(id=user.id).first()
-    
-    if user_exists:
-        return HTTPException(status_code=404, detail="User already exists")
-    else:
-        db_user = Table_users(**user.dict())
-        session.add(db_user)
-        session.commit()
-        session.refresh(db_user)
-    
-    return db_user
-
-# Delete User
-@app.delete("/user/{user_id}")
-def delete_user(user_id:int):
-    
-    user_delete = session.query(Table_users).filter_by(id=user_id).first()
-    
-    if user_delete is None:
-        return HTTPException(status_code=404, detail="User NOT found")
-    else:
-        session.delete(user_delete)
-        session.commit()
-    
-    return user_delete

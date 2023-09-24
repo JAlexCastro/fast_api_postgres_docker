@@ -1,0 +1,19 @@
+Para ejecutar este proyecto debes seguir los sigientes pasos:
+    
+    1. Clonar repositorio en git:
+        - git clone https://github.com/JAlexCastro/fast_api_postgres_docker.git
+
+    2. Crear el contenedor de POSTGRESQL desde la terminal:
+
+        - docker-compose up
+
+        - Verficar que el contenedor (my_cont_postgres) se creó correctamente,
+            - docker ps 
+
+    3. Ejecutar el archivo "main.py"
+        - Terminal de Windows: python main.py
+        - Terminal de Linux/IOS: python3 main.py
+
+    4. Accede a la interfast de la API
+        - Ingresa en tu buscador: http://127.0.0.1:8000/docs
+
